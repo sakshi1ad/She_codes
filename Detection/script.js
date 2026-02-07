@@ -77,108 +77,103 @@ function detectItem() {
 
     }, 1500);
 }
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(110, 247, 124, 0.25), transparent 45%),
-    radial-gradient(circle at bottom right, rgba(136, 225, 123, 0.25), transparent 45%),
-    linear-gradient(135deg, #0b2d14, #071b0c);
-  color: white;
+let points = 0;
+let map;
+let userLat, userLng;
+
+// Initialize map
+map = L.map('map').setView([20.5937, 78.9629], 5);
+
+// Map tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// User location
+navigator.geolocation.getCurrentPosition(pos => {
+  userLat = pos.coords.latitude;
+  userLng = pos.coords.longitude;
+
+  L.marker([userLat, userLng])
+    .addTo(map)
+    .bindPopup("📍 You are here")
+    .openPopup();
+
+  map.setView([userLat, userLng], 13);
+  loadBins();
+});
+
+// Mock E-Bins
+const bins = [
+  { name: "Green E-Bin Center", lat: 28.6139, lng: 77.2090, status: "Open" },
+  { name: "Smart E-Waste Hub", lat: 28.5355, lng: 77.3910, status: "Closed" },
+  { name: "City Recycling Point", lat: 28.4595, lng: 77.0266, status: "Open" }
+];
+
+function loadBins() {
+  const list = document.getElementById("binList");
+  list.innerHTML = "";
+
+  bins.forEach((bin, index) => {
+    const distance = calculateDistance(userLat, userLng, bin.lat, bin.lng);
+
+    // Map marker
+    const marker = L.marker([bin.lat, bin.lng]).addTo(map);
+    marker.bindPopup(getPopupContent(bin, distance));
+
+    // Side panel item
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${bin.name}</strong><br>
+      ${distance.toFixed(2)} km away<br>
+      Status: <b>${bin.status}</b>
+    `;
+
+    li.onclick = () => {
+      map.setView([bin.lat, bin.lng], 15);
+      marker.openPopup();
+    };
+
+    list.appendChild(li);
+  });
 }
 
-/* Navbar */
-.navbar {
-  background: rgba(0,0,0,0.65);
-  padding: 12px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+function getPopupContent(bin, distance) {
+  return `
+    <strong>${bin.name}</strong><br>
+    Status: <b>${bin.status}</b><br>
+    Distance: ${distance.toFixed(2)} km<br><br>
+    <a href="https://www.google.com/maps/dir/${userLat},${userLng}/${bin.lat},${bin.lng}">
+       📍 Get Directions
+    </a>
+    <br><br>
+    <button onclick="dumpHere()">🗑 Dump Here</button>
+  `;
 }
 
-/* Layout */
-.container {
-  display: flex;
-  height: calc(100vh - 60px);
+// Distance formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat/2)**2 +
+    Math.cos(lat1*Math.PI/180) *
+    Math.cos(lat2*Math.PI/180) *
+    Math.sin(dLon/2)**2;
+
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 }
 
-/* Side Panel */
-.side-panel {
-  width: 300px;
-  background: rgba(0,0,0,0.55);
-  padding: 15px;
-  overflow-y: auto;
+// Dump logic
+function dumpHere() {
+  points += 10;
+  document.getElementById("points").innerText = `Points: ${points} 🏅`;
+  document.getElementById("modal").style.display = "flex";
 }
 
-.side-panel h3 {
-  margin-top: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding-bottom: 8px;
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
 }
-
-.side-panel ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.side-panel li {
-  background: rgba(255,255,255,0.08);
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.side-panel li:hover {
-  background: rgba(110,247,124,0.25);
-}
-
-/* Map */
-#map {
-  flex: 1;
-}
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; 
-}
-
-.modal-content {
-  background: #0e1f14;
-  padding: 25px;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.modal-content button {
-  margin-top: 15px;
-  padding: 8px 18px;
-  border: none;
-  border-radius: 6px;
-  background: #6ef77c;
-  cursor: pointer;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-
-  .side-panel {
-    width: 100%;
-    height: 200px;
-  }
-
-  #map {
-    height: calc(100vh - 260px);
-  }
-}
+window.dumpHere = dumpHere;
+window.closeModal = closeModal;
