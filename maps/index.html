@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E-Waste Bin Locator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <h2>♻️ E-Bin Locator</h2>
+  <span id="points">Points: 0 🏅</span>
+</nav>
+
+<div class="container">
+  <!-- Side Panel -->
+  <div class="side-panel">
+    <h3>📍 Nearby E-Bins</h3>
+    <ul id="binList"></ul>
+  </div>
+
+  <!-- Map -->
+  <div id="map"></div>
+</div>
+
+<!-- Dump Confirmation Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h3>✅ Dump Successful</h3>
+    <p>You earned <strong>10 points</strong> 🎉</p>
+    <button onclick="closeModal()">OK</button>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
