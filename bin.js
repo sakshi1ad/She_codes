@@ -10,6 +10,10 @@ const footerText = document.getElementById("footerText");
 const footerBtn = document.getElementById("footerBtn");
 const authForm = document.getElementById("authForm");
 
+function navigate()
+{
+  window.location.href="detection/index.html";
+}
 function switchTab(tab) {
   activeTab = tab;
 
