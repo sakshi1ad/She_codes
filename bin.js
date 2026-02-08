@@ -10,10 +10,6 @@ const footerText = document.getElementById("footerText");
 const footerBtn = document.getElementById("footerBtn");
 const authForm = document.getElementById("authForm");
 
-function navigate()
-{
-  window.location.href="detection/index.html";
-}
 function switchTab(tab) {
   activeTab = tab;
 
@@ -42,5 +38,18 @@ authForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const formData = Object.fromEntries(new FormData(authForm).entries());
-  console.log(`${activeTab} data:`, formData);
+
+  // Basic validation for signup
+  if (activeTab === "signup") {
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+  }
+
+  // Simulate successful login/signup
+  alert(`${activeTab === "login" ? "Login" : "Signup"} successful!`);
+
+  // REDIRECT TO DETECTION PAGE
+  window.location.href = "detector.html";
 });
