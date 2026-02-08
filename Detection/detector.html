@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart E-Waste AI Detector</title>
+    <link rel="stylesheet" href="detector.css">
+</head>
+<body>
+   <nav class="navbar">
+    <div class="nav-logo">♻ SmartWaste</div>
+
+    <div class="nav-toggle" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Rewards</a></li>
+        <li><a href="location.html">Dump Location</a></li>
+        <li><a href="#">History</a></li>
+       
+    </ul>
+    </nav>
+
+<div class="app">
+   
+    <p class="subtitle">AI-assisted electronic waste identification</p>
+
+    <!-- Image Upload -->
+    <label class="upload-card">
+        <input type="file" id="imageInput" accept="image/*">
+        <span>📷 Upload Device Image</span>
+    </label>
+
+    <img id="preview" alt="Preview Image">
+
+    <!-- Device Selection -->
+    <select id="deviceSelect">
+        <option value="">Select Device Type</option>
+        <option value="battery">Battery</option>
+        <option value="charger">Charger / Cable</option>
+        <option value="phone">Mobile Phone</option>
+        <option value="laptop">Laptop</option>
+        <option value="earphone">Earphones / Headphones</option>
+        <option value="non-electronic">Not an Electronic Device</option>
+    </select>
+
+    <!-- Scan Button -->
+    <button onclick="detectItem()">🔍 Scan Device</button>
+
+    <!-- Result -->
+    <div id="result"></div>
+</div>
+
+<script src="detector.js"></script>
+</body>
+</html>
+
