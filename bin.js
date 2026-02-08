@@ -51,5 +51,5 @@ authForm.addEventListener("submit", (e) => {
   alert(`${activeTab === "login" ? "Login" : "Signup"} successful!`);
 
   // REDIRECT TO DETECTION PAGE
-  window.location.href = "detector.html";
+  window.location.href = "Detection/detector.html";
 });
